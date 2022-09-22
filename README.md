@@ -20,7 +20,8 @@ $ ddd-generate --name SomeEntity --dir some-entity
 $ OR ddd-generate -n SomeEntity -d some-entity
 ```
 
-##### Don't forget to build after update some code!
+##### Build is done automatically before commit
+If it doesn't work you should make husky file executable
 ```
-$ pnpm build
+$ chmod +x .husky/pre-commit
 ```
