@@ -236,7 +236,7 @@ export class Update${name}Response {
 
 export class Delete${name}Params extends PickType(${name}, ['id']) {}
 export class Delete${name}Response {
-  @IsObject() data: ${name};
+  @IsObject() data: Pick<${name}, 'id'>;
 }
 `;
 

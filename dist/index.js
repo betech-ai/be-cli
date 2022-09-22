@@ -232,7 +232,7 @@ export class Update${name}Response {
 
 export class Delete${name}Params extends PickType(${name}, ['id']) {}
 export class Delete${name}Response {
-  @IsObject() data: ${name};
+  @IsObject() data: Pick<${name}, 'id'>;
 }
 `;
     (0, fs_1.mkdirSync)(`./src/api/rest/controllers/${fileName}`, { recursive: true });
