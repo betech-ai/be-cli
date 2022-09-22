@@ -61,6 +61,14 @@ class Repository implements I${name}Repository {
     });
   }
   
+  public async create(data: Partial<${name}>): Promise<${name}> {
+    const ${objectName} = await this.databaseService.${objectName}.create({
+      data: this.fromEntity(data),
+    });
+
+    return this.toEntity(${objectName});
+  }
+  
   public async get(options: ListOptions<${name}> = {}): Promise<${name} | null> {
     const findFirstArgs = options ? this.buildIncomeFindManyArgs(options) : {};
     const ${objectName} = await this.databaseService.${objectName}.findFirst(findFirstArgs);
@@ -85,16 +93,8 @@ class Repository implements I${name}Repository {
       items: ${objectName}s.map(item => this.toEntity(item)),
     }
   }
-
-  public async create(data: Partial<${name}>): Promise<${name}> {
-    const ${objectName} = await this.databaseService.${objectName}.create({
-      data: this.fromEntity(data),
-    });
-
-    return this.toEntity(${objectName});
-  }
-
-  public async update(id: string, data: Partial<${name}>): Promise<${name}> {
+  
+  public async update(id: string, data: Partial<Omit<${name}, 'id'>>): Promise<${name}> {
     const ${objectName} = await this.databaseService.${objectName}.update({
       where: { id },
       data,
@@ -160,7 +160,7 @@ export class ${name}Service {
   ) { }
 
   async create(data: Partial<${name}>): Promise<${name}> {
-    return this.${objectName}Repository.create(new ${name}(data));
+    return this.${objectName}Repository.create(data);
   }
 
   async get(options: ListOptions<${name}>): Promise<${name}> {
@@ -175,7 +175,7 @@ export class ${name}Service {
     return this.${objectName}Repository.list(options);
   }
 
-  async update(id: string, data: Partial<${name}>): Promise<${name}> {
+  async update(id: string, data: Partial<Omit<${name}, 'id'>>): Promise<${name}> {
     return this.${objectName}Repository.update(id, data);
   }
 
