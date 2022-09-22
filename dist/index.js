@@ -1,8 +1,13 @@
-import { mkdirSync, writeFileSync, readdirSync } from 'fs';
-import yargs from 'yargs';
-
-function generateEntity(name: string, fileName: string) {
-  const data = `import { v4 as uuid } from 'uuid';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generate = void 0;
+const fs_1 = require("fs");
+const yargs_1 = __importDefault(require("yargs"));
+function generateEntity(name, fileName) {
+    const data = `import { v4 as uuid } from 'uuid';
 
 export class ${name} {
   public id: string;
@@ -14,13 +19,11 @@ export class ${name} {
     this.createdAt = init.createdAt || new Date();
   }
 }`;
-
-  mkdirSync(`./src/domain/${fileName}`, { recursive: true });
-  writeFileSync(`./src/domain/${fileName}/${fileName}.entity.ts`, data);
+    (0, fs_1.mkdirSync)(`./src/domain/${fileName}`, { recursive: true });
+    (0, fs_1.writeFileSync)(`./src/domain/${fileName}/${fileName}.entity.ts`, data);
 }
-
-function generateRepositoryInterface(name: string, fileName: string): void {
-  const data = `import { ${name} } from './${fileName}.entity';
+function generateRepositoryInterface(name, fileName) {
+    const data = `import { ${name} } from './${fileName}.entity';
 import { ListOptions, ListResult } from '../domain.types';
 
 export interface I${name}Repository {
@@ -31,12 +34,10 @@ export interface I${name}Repository {
   update(id: string, data: Omit<Partial<${name}>, 'id'>): Promise<${name}>;
   delete(id: string): Promise<void>;
 }`;
-
-  writeFileSync(`./src/domain/${fileName}/${fileName}.repository.i.ts`, data);
+    (0, fs_1.writeFileSync)(`./src/domain/${fileName}/${fileName}.repository.i.ts`, data);
 }
-
-function generateRepository(name: string, objectName: string, fileName: string): void {
-  const data = `import { Injectable, Provider } from '@nestjs/common';
+function generateRepository(name, objectName, fileName) {
+    const data = `import { Injectable, Provider } from '@nestjs/common';
 import { ${name} } from '../../../domain/${fileName}/${fileName}.entity';
 import { ${name} as ${name}Model, Prisma } from '@prisma/client';
 import { I${name}Repository } from '../../../domain/${fileName}/${fileName}.repository.i';
@@ -126,12 +127,11 @@ export const ${name}Repository: Provider = {
   useClass: Repository,
 };
 `;
-  mkdirSync(`./src/infra/repository/${fileName}`, { recursive: true });
-  writeFileSync(`./src/infra/repository/${fileName}/${fileName}.repository.ts`, data);
+    (0, fs_1.mkdirSync)(`./src/infra/repository/${fileName}`, { recursive: true });
+    (0, fs_1.writeFileSync)(`./src/infra/repository/${fileName}/${fileName}.repository.ts`, data);
 }
-
-function generateModule(name: string, fileName: string): void {
-  const data = `import { Module } from '@nestjs/common';
+function generateModule(name, fileName) {
+    const data = `import { Module } from '@nestjs/common';
 import { RepositoryModule } from '../../infra/repository/repository.module';
 import { ${name}Service } from './${fileName}.service';
 
@@ -142,12 +142,10 @@ import { ${name}Service } from './${fileName}.service';
 })
 export class ${name}Module {}
 `;
-
-  writeFileSync(`./src/domain/${fileName}/${fileName}.module.ts`, data);
+    (0, fs_1.writeFileSync)(`./src/domain/${fileName}/${fileName}.module.ts`, data);
 }
-
-function generateService(name: string, objectName: string, fileName: string): void {
-  const data = `import { Injectable, Inject } from '@nestjs/common';
+function generateService(name, objectName, fileName) {
+    const data = `import { Injectable, Inject } from '@nestjs/common';
 import { ${name}Repository } from '../../infra/repository/${fileName}/${fileName}.repository';
 import { ListOptions, ListResult } from '../domain.types';
 import { I${name}Repository } from './${fileName}.repository.i';
@@ -185,12 +183,10 @@ export class ${name}Service {
   }
 }
 `;
-
-  writeFileSync(`./src/domain/${fileName}/${fileName}.service.ts`, data);
+    (0, fs_1.writeFileSync)(`./src/domain/${fileName}/${fileName}.service.ts`, data);
 }
-
-function generateDto(name: string, fileName: string): void {
-  const data = `import { Type } from 'class-transformer';
+function generateDto(name, fileName) {
+    const data = `import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested, IsUUID, IsPositive, IsInt, IsOptional, IsObject, IsEnum, IsDateString } from 'class-validator';
 import { PartialType, PickType } from '@nestjs/swagger';
 import { SortDirection } from '../../interfaces.types';
@@ -239,13 +235,11 @@ export class Delete${name}Response {
   @IsObject() data: ${name};
 }
 `;
-
-  mkdirSync(`./src/api/rest/controllers/${fileName}`, { recursive: true });
-  writeFileSync(`./src/api/rest/controllers/${fileName}/${fileName}.dto.ts`, data);
+    (0, fs_1.mkdirSync)(`./src/api/rest/controllers/${fileName}`, { recursive: true });
+    (0, fs_1.writeFileSync)(`./src/api/rest/controllers/${fileName}/${fileName}.dto.ts`, data);
 }
-
-function generateController(name: string, objectName: string, fileName: string): void {
-  const data = `import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+function generateController(name, objectName, fileName) {
+    const data = `import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ${name}Service } from '../../../../domain/${fileName}/${fileName}.service';
@@ -354,46 +348,38 @@ export class ${name}Controller {
   }
 }
 `;
-
-  mkdirSync(`./src/api/rest/controllers/${fileName}`, { recursive: true });
-  writeFileSync(`./src/api/rest/controllers/${fileName}/${fileName}.controller.ts`, data);
+    (0, fs_1.mkdirSync)(`./src/api/rest/controllers/${fileName}`, { recursive: true });
+    (0, fs_1.writeFileSync)(`./src/api/rest/controllers/${fileName}/${fileName}.controller.ts`, data);
 }
-
-function capitalizeFirstLetter(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
-
-function uncapitalizeFirstLetter(str: string): string {
-  return str.charAt(0).toLowerCase() + str.slice(1);
+function uncapitalizeFirstLetter(str) {
+    return str.charAt(0).toLowerCase() + str.slice(1);
 }
-
-
-export function generate (options: any): void {
-  const isCurrentDirAProject = readdirSync('.').some((file: string) => {
-    return file === 'package.json'
-  });
-
-  if (!isCurrentDirAProject) console.error('Need to be in the root of DDD project directory!');
-
-  const usage = '\nGenerates files for DDD project: domain folder with entity, controller with DTO and repository\n\n' +
-      'Usage:   ddd-generate -n <EntityName> -d <entity-directory>\nExample: ddd-generate -n SomeEntity -d some-entity';
-
-  const argv: any = yargs(options)
-    .usage(usage)
-    .option('n', {alias: 'name', describe: 'Name of entity', type: 'string', demandOption: true })
-    .option('d', {alias: 'dir', describe: 'Directory name of entity', type: 'string', demandOption: true })
-    .help(true)
-    .argv;
-
-  const ENTITY_NAME = capitalizeFirstLetter(argv.name);
-  const OBJECT_NAME = uncapitalizeFirstLetter(argv.name);
-  const DIR = argv.dir;
-
-  generateEntity(ENTITY_NAME, DIR);
-  generateRepositoryInterface(ENTITY_NAME, DIR);
-  generateRepository(ENTITY_NAME, OBJECT_NAME, DIR);
-  generateModule(ENTITY_NAME, DIR);
-  generateService(ENTITY_NAME, OBJECT_NAME, DIR);
-  generateDto(ENTITY_NAME, DIR);
-  generateController(ENTITY_NAME, OBJECT_NAME, DIR);
+function generate(options) {
+    const isCurrentDirAProject = (0, fs_1.readdirSync)('.').some((file) => {
+        return file === 'package.json';
+    });
+    if (!isCurrentDirAProject)
+        console.error('Need to be in the root of DDD project directory!');
+    const usage = '\nGenerates files for DDD project: domain folder with entity, controller with DTO and repository\n\n' +
+        'Usage:   ddd-generate -n <EntityName> -d <entity-directory>\nExample: ddd-generate -n SomeEntity -d some-entity';
+    const argv = (0, yargs_1.default)(options)
+        .usage(usage)
+        .option('n', { alias: 'name', describe: 'Name of entity', type: 'string', demandOption: true })
+        .option('d', { alias: 'dir', describe: 'Directory name of entity', type: 'string', demandOption: true })
+        .help(true)
+        .argv;
+    const ENTITY_NAME = capitalizeFirstLetter(argv.name);
+    const OBJECT_NAME = uncapitalizeFirstLetter(argv.name);
+    const DIR = argv.dir;
+    generateEntity(ENTITY_NAME, DIR);
+    generateRepositoryInterface(ENTITY_NAME, DIR);
+    generateRepository(ENTITY_NAME, OBJECT_NAME, DIR);
+    generateModule(ENTITY_NAME, DIR);
+    generateService(ENTITY_NAME, OBJECT_NAME, DIR);
+    generateDto(ENTITY_NAME, DIR);
+    generateController(ENTITY_NAME, OBJECT_NAME, DIR);
 }
+exports.generate = generate;
