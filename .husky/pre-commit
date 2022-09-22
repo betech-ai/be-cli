@@ -3,3 +3,4 @@
 
 pnpm build
 git add -A
+echo "test"
