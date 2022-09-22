@@ -146,7 +146,6 @@ export class ${name}Module {}
 }
 function generateService(name, objectName, fileName) {
     const data = `import { Injectable, Inject } from '@nestjs/common';
-import { ${name}Repository } from '../../infra/repository/${fileName}/${fileName}.repository';
 import { ListOptions, ListResult } from '../domain.types';
 import { I${name}Repository } from './${fileName}.repository.i';
 import { ${name} } from './${fileName}.entity';
