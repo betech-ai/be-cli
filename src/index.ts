@@ -27,7 +27,7 @@ export interface I${name}Repository {
   create(data: Partial<${name}>): Promise<${name}>;
   get(data: ListOptions<${name}>): Promise<${name} | null>;
   getById(id: string): Promise<${name}>;
-  list(data?: ListOptions<${name}>): Promise<ListResult<${name}>>;
+  list(options?: ListOptions<${name}>): Promise<ListResult<${name}>>;
   update(id: string, data: Omit<Partial<${name}>, 'id'>): Promise<${name}>;
   delete(id: string): Promise<void>;
 }`;
@@ -172,8 +172,8 @@ export class ${name}Service {
     return this.${objectName}Repository.getById(id);
   }
   
-  async list(data?: ListOptions<${name}>): Promise<ListResult<${name}>> {
-    return this.${objectName}Repository.list(data);
+  async list(options?: ListOptions<${name}>): Promise<ListResult<${name}>> {
+    return this.${objectName}Repository.list(options);
   }
 
   async update(id: string, data: Partial<${name}>): Promise<${name}> {
