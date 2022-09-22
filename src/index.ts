@@ -344,7 +344,7 @@ export class ${name}Controller {
   @ApiOperation({ summary: 'Delete ${fileName}' })
   @UseGuards(AuthGuard('jwt'))
   async cancelChallenge(@Req() req, @Param() params: Delete${name}Params): Promise<Delete${name}Response> {
-    const res = await this.${objectName}Service.delete(params.id);
+    await this.${objectName}Service.delete(params.id);
 
     return {
       data: {
