@@ -4,12 +4,12 @@
 
 Install from git:
 ```
-$ npm i -g git@github.com:BB-Today/be-cli.git
+$ npm i -g git@github.com:betech-ai/be-cli.git
 ```
 
 Or install from local git repo to debug/develop new features
 ```
-$ git clone git@github.com:BB-Today/be-cli.git
+$ git clone git@github.com:betech-ai/be-cli.git
 $ cd ddd-generate && npm i -g .
 ```
 
