@@ -192,7 +192,7 @@ function generateDto(name: string, fileName: string): void {
   const data = `import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested, IsUUID, IsPositive, IsInt, IsOptional, IsObject, IsEnum, IsDateString } from 'class-validator';
 import { PartialType, PickType } from '@nestjs/swagger';
-import { SortDirection } from '../../interfaces.types';
+import { SortDirection } from '../../types.dto';
 
 export class ${name} {
   @IsString() @IsUUID() @IsNotEmpty() id: string;
